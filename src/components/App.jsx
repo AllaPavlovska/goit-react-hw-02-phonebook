@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
-import ContactForm from './AddProfileForm';
+import ContactForm from './AddProfileForm/AddProfileForm';
 import ContactList from './ContactList';
+import Filter from './Filter';
 
 const initialState = {
   contacts: [
@@ -21,7 +22,7 @@ export class App extends Component {
     const isNameExist = contacts.some((existingContact) => existingContact.name === contact.name);
 
     if (isNameExist) {
-      alert(`'${contact.name}' is  already in contacts.`);
+      alert(`'${contact.name}' is already in contacts!`);
       return;
     }
 
@@ -44,17 +45,16 @@ export class App extends Component {
 
   render() {
     const { contacts, filter } = this.state;
+    const filteredContacts = contacts.filter((contact) =>
+      contact.name.toLowerCase().includes(filter.toLowerCase())
+    );
 
     return (
       <div>
         <h1>Phonebook</h1>
         <ContactForm onSubmit={this.handleAddContact} />
-        <h2>Contacts</h2>
-        <label>
-          Find contacts by name:
-          <input type="text" value={filter} onChange={this.handleFilterChange} />
-        </label>
-        <ContactList contacts={contacts} filter={filter} onDeleteContact={this.handleDeleteContact} />
+        <Filter value={filter} onChange={this.handleFilterChange} />
+        <ContactList contacts={filteredContacts} onDeleteContact={this.handleDeleteContact} />
       </div>
     );
   }
